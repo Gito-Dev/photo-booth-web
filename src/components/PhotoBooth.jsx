@@ -143,34 +143,33 @@ const PhotoBooth = () => {
         className="h-screen flex bg-white"
       >
         {/* Left side - Photos (50% width) */}
-        <div className="w-1/2 h-full flex items-center justify-center">
-          <div id="photo-strip" className="bg-white p-4">
-            <div className="flex flex-col gap-2 max-w-[200px]">
-              <div className="text-center text-xs font-mono mb-1 text-gray-600">
+        <div className="w-1/2 flex items-center justify-center">
+          <div
+            id="photo-strip"
+            className="p-4 h-[90vh] flex items-center justify-center"
+            style={{ backgroundColor: bgColor }}
+          >
+            <div className="flex flex-col gap-1 max-w-[200px] scale-[0.8]">
+              <div className="text-center font-mono mb-0.5 text-gray-600 text-sm">
                 {new Date().toLocaleDateString()}
               </div>
 
               {photos.map((photo, index) => (
                 <div key={index} className="relative">
-                  <div
-                    className="photo-frame aspect-[4/3] rounded-lg overflow-hidden p-1"
-                    style={{
-                      backgroundColor: bgColor,
-                    }}
-                  >
+                  <div className="aspect-[4/3] overflow-hidden">
                     <img
                       src={photo}
                       alt={`Photo ${index + 1}`}
-                      className="w-full h-full object-cover rounded"
+                      className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-full text-[10px] font-mono bg-white/90 text-gray-600">
+                  <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-lg text-[10px] font-mono bg-white/80 text-gray-600">
                     {index + 1}/5
                   </div>
                 </div>
               ))}
 
-              <div className="text-center text-[10px] font-mono mt-1 text-gray-600">
+              <div className="text-center text-[10px] font-mono mt-0.5 text-gray-600">
                 PhotoBooth
               </div>
             </div>
