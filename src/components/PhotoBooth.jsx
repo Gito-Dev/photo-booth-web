@@ -30,6 +30,14 @@ const cameraIcon = (
   </svg>
 );
 
+const flashStyle = `
+  @keyframes flash {
+    0% { opacity: 0; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0; }
+  }
+`;
+
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
   const [isCapturing, setIsCapturing] = useState(false);
@@ -38,6 +46,7 @@ const PhotoBooth = () => {
   const [countdown, setCountdown] = useState(3);
   const [borderColor, setBorderColor] = useState("#000000");
   const [cameraPermission, setCameraPermission] = useState(false);
+  const [isFlashing, setIsFlashing] = useState(false);
   const webcamRef = useRef(null);
 
   const capturePhotos = async () => {
@@ -50,10 +59,14 @@ const PhotoBooth = () => {
         setCountdown(j);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
+      setIsFlashing(true);
       const photo = webcamRef.current?.getScreenshot();
       if (photo) {
         newPhotos.push(photo);
       }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      setIsFlashing(false);
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
     setPhotos(newPhotos);
@@ -312,89 +325,102 @@ const PhotoBooth = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-white">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
-        className="w-full max-w-lg"
-      >
+    <>
+      <style>{flashStyle}</style>
+      <div className="h-screen flex flex-col items-center justify-center bg-white">
         <motion.div
-          key="camera-view"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className="flex flex-col items-center gap-4"
+          className="w-full max-w-lg"
         >
-          {/* Camera Canvas - Always visible */}
-          <div className="w-[400px] h-[400px] overflow-hidden rounded-lg shadow-xl bg-gray-100">
-            <div className="relative w-full h-full">
-              {/* Camera Feed - Only shown after permission */}
-              <Webcam
-                ref={webcamRef}
-                audio={false}
-                screenshotFormat="image/jpeg"
-                className={`w-full h-full object-cover transition-opacity duration-300 scale-x-[-1] ${
-                  !cameraPermission ? "opacity-0" : "opacity-100"
-                }`}
-              />
+          <motion.div
+            key="camera-view"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="flex flex-col items-center gap-4"
+          >
+            {/* Camera Canvas - Always visible */}
+            <div className="w-[400px] h-[400px] overflow-hidden rounded-lg shadow-xl bg-gray-100">
+              <div className="relative w-full h-full">
+                {/* Camera Feed - Only shown after permission */}
+                <Webcam
+                  ref={webcamRef}
+                  audio={false}
+                  screenshotFormat="image/jpeg"
+                  className={`w-full h-full object-cover transition-opacity duration-300 scale-x-[-1] ${
+                    !cameraPermission ? "opacity-0" : "opacity-100"
+                  }`}
+                />
 
-              {/* Camera Icon Overlay - Only visible before permission granted */}
-              {!cameraPermission && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                  <img
-                    src={camera}
-                    alt="Camera"
-                    className="w-16 h-16 opacity-30"
+                {/* Flash Overlay */}
+                {isFlashing && (
+                  <div
+                    className="absolute inset-0 bg-white"
+                    style={{
+                      animation: "flash 200ms ease-out",
+                    }}
                   />
-                  <p className="text-gray-500 text-sm text-center">
-                    Camera access is required <br /> for taking photos
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
+                )}
 
-          {/* Button - Always below canvas */}
-          {!cameraPermission ? (
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={handleCameraAccess}
-              className="w-full bg-blue-500 text-white py-3 rounded-lg font-bold shadow-lg"
-            >
-              Allow Access
-            </motion.button>
-          ) : (
-            !isCapturing && (
+                {/* Camera Icon Overlay - Only visible before permission granted */}
+                {!cameraPermission && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                    <img
+                      src={camera}
+                      alt="Camera"
+                      className="w-16 h-16 opacity-30"
+                    />
+                    <p className="text-gray-500 text-sm text-center">
+                      Camera access is required <br /> for taking photos
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Button - Always below canvas */}
+            {!cameraPermission ? (
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                onClick={capturePhotos}
-                className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
+                onClick={handleCameraAccess}
+                className="w-40 py-3 rounded-lg bg-blue-500 text-white font-bold shadow-lg hover:bg-blue-600"
               >
-                {cameraIcon}
+                Allow Access
               </motion.button>
-            )
-          )}
+            ) : (
+              !isCapturing && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  onClick={capturePhotos}
+                  className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
+                >
+                  {cameraIcon}
+                </motion.button>
+              )
+            )}
 
-          {/* Countdown Overlay */}
-          {isCapturing && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-white font-bold"
-            >
-              {countdown}
-            </motion.div>
-          )}
+            {/* Countdown Overlay */}
+            {isCapturing && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-6xl text-white font-bold"
+              >
+                {countdown}
+              </motion.div>
+            )}
+          </motion.div>
         </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 };
 
