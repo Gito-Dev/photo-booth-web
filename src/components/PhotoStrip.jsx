@@ -1,4 +1,4 @@
-const PhotoStrip = ({ photos, bgColor }) => {
+const PhotoStrip = ({ photos, bgColor, customText, textColor }) => {
   // Define constants for photo dimensions and spacing
   const photoHeight = 150; // Adjusted height for each photo
   const photoGap = 10; // Gap between photos
@@ -34,8 +34,11 @@ const PhotoStrip = ({ photos, bgColor }) => {
           </div>
         ))}
 
-        <div className="text-center text-[10px] font-mono mt-0.5 text-gray-600">
-          PhotoBooth
+        <div
+          className="text-center text-[10px] font-mono mt-0.5"
+          style={{ color: textColor }}
+        >
+          {customText}
         </div>
       </div>
     </div>

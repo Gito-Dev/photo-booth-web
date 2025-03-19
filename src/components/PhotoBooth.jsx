@@ -14,6 +14,8 @@ const PhotoBooth = () => {
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFlashing, setIsFlashing] = useState(false);
   const [photoCount, setPhotoCount] = useState(5);
+  const [customText, setCustomText] = useState("Your Text");
+  const [textColor, setTextColor] = useState("#fef9c3");
   const webcamRef = useRef(null);
 
   useEffect(() => {
@@ -65,19 +67,19 @@ const PhotoBooth = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      // Adjust dimensions and padding
-      const photoWidth = 300;
+      // Set dimensions for the downloaded image
+      const photoWidth = 250; // Increased width for the downloaded image
       const photoHeight = (photoWidth * 3) / 4;
       const padding = 20;
-      const headerHeight = 30;
-      const footerHeight = 30;
-      const photoGap = 15;
+      const headerHeight = 40; // Height for the top
+      const footerHeight = 60; // Increased height for the bottom
+      const photoGap = 10;
 
-      // Calculate total height including all spaces
+      // Calculate total height based on the number of photos
       const totalHeight =
         headerHeight +
-        photoHeight * 5 +
-        photoGap * 4 +
+        photoHeight * photos.length +
+        photoGap * (photos.length - 1) +
         footerHeight +
         padding * 2;
 
@@ -90,12 +92,12 @@ const PhotoBooth = () => {
 
       // Add date at top
       ctx.fillStyle = "#4B5563";
-      ctx.font = "16px monospace";
+      ctx.font = "14px monospace";
       ctx.textAlign = "center";
       ctx.fillText(
         new Date().toLocaleDateString(),
         canvas.width / 2,
-        padding + 18
+        padding + 24
       );
 
       // Load and draw each photo
@@ -120,24 +122,24 @@ const PhotoBooth = () => {
 
             // Draw frame number with semi-transparent background
             ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            const numberWidth = 35;
-            const numberHeight = 20;
+            const numberWidth = 30;
+            const numberHeight = 15;
             const numberX = canvas.width - padding - numberWidth - 5;
             const numberY = y + photoHeight - numberHeight - 5;
 
             // Draw rounded rectangle for number background
             ctx.beginPath();
-            ctx.roundRect(numberX, numberY, numberWidth, numberHeight, 10);
+            ctx.roundRect(numberX, numberY, numberWidth, numberHeight, 5);
             ctx.fill();
 
             // Draw number
             ctx.fillStyle = "#4B5563";
-            ctx.font = "12px monospace";
+            ctx.font = "10px monospace";
             ctx.textAlign = "center";
             ctx.fillText(
-              `${i + 1}/5`,
-              canvas.width - padding - numberWidth / 2 - 5,
-              y + photoHeight - 10
+              `${i + 1}/${photos.length}`,
+              numberX + numberWidth / 2,
+              numberY + 12
             );
 
             resolve();
@@ -146,11 +148,15 @@ const PhotoBooth = () => {
         });
       }
 
-      // Add PhotoBooth text at bottom
-      ctx.fillStyle = "#4B5563";
+      // Add custom text at the bottom
+      ctx.fillStyle = textColor;
       ctx.font = "14px monospace";
       ctx.textAlign = "center";
-      ctx.fillText("PhotoBooth", canvas.width / 2, canvas.height - padding - 8);
+      ctx.fillText(
+        customText,
+        canvas.width / 2,
+        canvas.height - footerHeight + 20 // Positioned below the images
+      );
 
       // Download the canvas
       const link = document.createElement("a");
@@ -166,7 +172,12 @@ const PhotoBooth = () => {
     return (
       <motion.div className="h-screen flex flex-col sm:flex-row bg-white">
         <div className="flex-1 flex flex-col items-center justify-center order-2 sm:order-1">
-          <PhotoStrip photos={photos} bgColor={bgColor} />
+          <PhotoStrip
+            photos={photos}
+            bgColor={bgColor}
+            customText={customText}
+            textColor={textColor}
+          />
           <div className="w-full max-w-md px-8 mt-4 sm:hidden">
             <ActionButtons
               onRetake={() => {
@@ -180,6 +191,29 @@ const PhotoBooth = () => {
         <div className="flex-1 flex items-center justify-center border-t sm:border-t-0 sm:border-l order-1 sm:order-2">
           <div className="w-full max-w-md px-8">
             <Colors bgColor={bgColor} setBgColor={setBgColor} />
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Custom Text
+              </label>
+              <input
+                type="text"
+                value={customText}
+                onChange={(e) => setCustomText(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+                placeholder="Enter your text here"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Text Color
+              </label>
+              <input
+                type="color"
+                value={textColor}
+                onChange={(e) => setTextColor(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
+              />
+            </div>
           </div>
           <div className="w-full max-w-md px-8 mt-4 hidden sm:block">
             <ActionButtons
