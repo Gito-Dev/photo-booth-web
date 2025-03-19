@@ -252,15 +252,31 @@ const PhotoBooth = () => {
             !isCapturing && (
               <>
                 <div className="flex justify-center mb-4">
-                  <label className="mr-2">Number of Photos:</label>
-                  <select
-                    value={photoCount}
-                    onChange={(e) => setPhotoCount(Number(e.target.value))}
-                    className="border rounded px-2 py-1"
-                  >
-                    <option value={3}>3</option>
-                    <option value={5}>5</option>
-                  </select>
+                  <label className="mr-4">Number of Photos:</label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="photoCount"
+                        value={3}
+                        checked={photoCount === 3}
+                        onChange={() => setPhotoCount(3)}
+                        className="form-radio text-blue-600"
+                      />
+                      <span className="ml-2">3</span>
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="photoCount"
+                        value={5}
+                        checked={photoCount === 5}
+                        onChange={() => setPhotoCount(5)}
+                        className="form-radio text-blue-600"
+                      />
+                      <span className="ml-2">5</span>
+                    </label>
+                  </div>
                 </div>
                 <div className="flex justify-center">
                   <motion.button
