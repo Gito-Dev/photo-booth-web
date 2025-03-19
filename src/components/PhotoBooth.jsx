@@ -13,6 +13,7 @@ const PhotoBooth = () => {
   const [countdown, setCountdown] = useState(3);
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFlashing, setIsFlashing] = useState(false);
+  const [photoCount, setPhotoCount] = useState(5);
   const webcamRef = useRef(null);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const PhotoBooth = () => {
     setIsCapturing(true);
     const newPhotos = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < photoCount; i++) {
       setCountdown(3);
       for (let j = 3; j > 0; j--) {
         setCountdown(j);
@@ -163,13 +164,24 @@ const PhotoBooth = () => {
 
   if (showPrintView) {
     return (
-      <motion.div className="h-screen flex bg-white">
-        <div className="w-1/2 flex items-center justify-center">
+      <motion.div className="h-screen flex flex-col sm:flex-row bg-white">
+        <div className="flex-1 flex flex-col items-center justify-center order-2 sm:order-1">
           <PhotoStrip photos={photos} bgColor={bgColor} />
+          <div className="w-full max-w-md px-8 mt-4 sm:hidden">
+            <ActionButtons
+              onRetake={() => {
+                setShowPrintView(false);
+                setPhotos([]);
+              }}
+              onDownload={handleDownload}
+            />
+          </div>
         </div>
-        <div className="w-1/2 h-full flex items-center justify-center border-l">
+        <div className="flex-1 flex items-center justify-center border-t sm:border-t-0 sm:border-l order-1 sm:order-2">
           <div className="w-full max-w-md px-8">
             <Colors bgColor={bgColor} setBgColor={setBgColor} />
+          </div>
+          <div className="w-full max-w-md px-8 mt-4 hidden sm:block">
             <ActionButtons
               onRetake={() => {
                 setShowPrintView(false);
@@ -204,27 +216,40 @@ const PhotoBooth = () => {
             </div>
           ) : (
             !isCapturing && (
-              <div className="flex justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                  onClick={capturePhotos}
-                  className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
-                >
-                  <svg
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 52 52"
-                    className="w-8 h-8"
+              <>
+                <div className="flex justify-center mb-4">
+                  <label className="mr-2">Number of Photos:</label>
+                  <select
+                    value={photoCount}
+                    onChange={(e) => setPhotoCount(Number(e.target.value))}
+                    className="border rounded px-2 py-1"
                   >
-                    <g>
-                      <path d="M26,20c-4.4,0-8,3.6-8,8s3.6,8,8,8s8-3.6,8-8S30.4,20,26,20z" />
-                      <path d="M46,14h-5.2c-1.4,0-2.6-0.7-3.4-1.8l-2.3-3.5C34.4,7,32.7,6,30.9,6h-9.8c-1.8,0-3.5,1-4.3,2.7l-2.3,3.5c-0.7,1.1-2,1.8-3.4,1.8H6c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h40c2.2,0,4-1.8,4-4V18C50,15.8,48.2,14,46,14z M26,40c-6.6,0-12-5.4-12-12s5.4-12,12-12s12,5.4,12,12S32.6,40,26,40z" />
-                    </g>
-                  </svg>
-                </motion.button>
-              </div>
+                    <option value={3}>3</option>
+                    <option value={5}>5</option>
+                  </select>
+                </div>
+                <div className="flex justify-center">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    onClick={capturePhotos}
+                    className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
+                  >
+                    <svg
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 52 52"
+                      className="w-8 h-8"
+                    >
+                      <g>
+                        <path d="M26,20c-4.4,0-8,3.6-8,8s3.6,8,8,8s8-3.6,8-8S30.4,20,26,20z" />
+                        <path d="M46,14h-5.2c-1.4,0-2.6-0.7-3.4-1.8l-2.3-3.5C34.4,7,32.7,6,30.9,6h-9.8c-1.8,0-3.5,1-4.3,2.7l-2.3,3.5c-0.7,1.1-2,1.8-3.4,1.8H6c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h40c2.2,0,4-1.8,4-4V18C50,15.8,48.2,14,46,14z M26,40c-6.6,0-12-5.4-12-12s5.4-12,12-12s12,5.4,12,12S32.6,40,26,40z" />
+                      </g>
+                    </svg>
+                  </motion.button>
+                </div>
+              </>
             )
           )}
         </motion.div>

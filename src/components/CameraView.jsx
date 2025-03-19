@@ -9,7 +9,7 @@ const CameraView = ({
   isCapturing,
 }) => {
   return (
-    <div className="w-[400px] h-[400px] overflow-hidden rounded-lg shadow-xl bg-gray-100">
+    <div className="w-full max-w-xs sm:max-w-md h-[300px] sm:h-[400px] overflow-hidden rounded-lg shadow-xl bg-gray-100">
       <div className="relative w-full h-full">
         <Webcam
           ref={webcamRef}
