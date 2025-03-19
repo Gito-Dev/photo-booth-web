@@ -4,6 +4,7 @@ import CameraView from "./CameraView";
 import Colors from "./Colors";
 import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
+import Filters from "./Filters";
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -14,8 +15,7 @@ const PhotoBooth = () => {
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFlashing, setIsFlashing] = useState(false);
   const [photoCount, setPhotoCount] = useState(5);
-  const [customText, setCustomText] = useState("Your Text");
-  const [textColor, setTextColor] = useState("#fef9c3");
+  const [selectedFilter, setSelectedFilter] = useState("none");
   const webcamRef = useRef(null);
 
   useEffect(() => {
@@ -114,6 +114,9 @@ const PhotoBooth = () => {
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
 
+            // Apply filter to the canvas context
+            ctx.filter = selectedFilter !== "none" ? selectedFilter : "none";
+
             // Draw mirrored photo
             ctx.drawImage(img, padding, y, photoWidth, photoHeight);
 
@@ -148,16 +151,6 @@ const PhotoBooth = () => {
         });
       }
 
-      // Add custom text at the bottom
-      ctx.fillStyle = textColor;
-      ctx.font = "14px monospace";
-      ctx.textAlign = "center";
-      ctx.fillText(
-        customText,
-        canvas.width / 2,
-        canvas.height - footerHeight + 20 // Positioned below the images
-      );
-
       // Download the canvas
       const link = document.createElement("a");
       link.download = `photobooth-${new Date().getTime()}.jpg`;
@@ -175,54 +168,25 @@ const PhotoBooth = () => {
           <PhotoStrip
             photos={photos}
             bgColor={bgColor}
-            customText={customText}
-            textColor={textColor}
+            selectedFilter={selectedFilter}
           />
-          <div className="w-full max-w-md px-8 mt-4 sm:hidden">
-            <ActionButtons
-              onRetake={() => {
-                setShowPrintView(false);
-                setPhotos([]);
-              }}
-              onDownload={handleDownload}
-            />
-          </div>
         </div>
-        <div className="flex-1 flex items-center justify-center border-t sm:border-t-0 sm:border-l order-1 sm:order-2">
+        <div className="flex-1 flex flex-col items-center justify-center border-t sm:border-t-0 sm:border-l order-1 sm:order-2">
           <div className="w-full max-w-md px-8">
             <Colors bgColor={bgColor} setBgColor={setBgColor} />
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Custom Text
-              </label>
-              <input
-                type="text"
-                value={customText}
-                onChange={(e) => setCustomText(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
-                placeholder="Enter your text here"
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Text Color
-              </label>
-              <input
-                type="color"
-                value={textColor}
-                onChange={(e) => setTextColor(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2"
-              />
-            </div>
-          </div>
-          <div className="w-full max-w-md px-8 mt-4 hidden sm:block">
-            <ActionButtons
-              onRetake={() => {
-                setShowPrintView(false);
-                setPhotos([]);
-              }}
-              onDownload={handleDownload}
+            <Filters
+              selectedFilter={selectedFilter}
+              setSelectedFilter={setSelectedFilter}
             />
+            <div className="mt-4">
+              <ActionButtons
+                onRetake={() => {
+                  setShowPrintView(false);
+                  setPhotos([]);
+                }}
+                onDownload={handleDownload}
+              />
+            </div>
           </div>
         </div>
       </motion.div>
