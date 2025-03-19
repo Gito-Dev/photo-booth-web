@@ -6,6 +6,8 @@ const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
   const padding = 20; // Padding used in the download
   const headerHeight = 40; // Height for the top
   const footerHeight = 60; // Height for the bottom
+
+  // Adjust total height based on the number of photos
   const totalHeight =
     headerHeight +
     photos.length * photoHeight +
@@ -13,13 +15,24 @@ const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
     footerHeight +
     padding * 2;
 
+  // Adjust layout for 4 photos
+  const isFourPhotos = photos.length === 4;
+  const adjustedPadding = isFourPhotos ? padding * 0.5 : padding; // Reduce padding for 4 photos
+  const adjustedTotalHeight = isFourPhotos
+    ? totalHeight - (padding - adjustedPadding) * 2
+    : totalHeight;
+
   return (
     <div
       id="photo-strip"
       className="p-4 flex items-center justify-center"
-      style={{ backgroundColor: bgColor, height: `${totalHeight}px` }}
+      style={{
+        backgroundColor: bgColor,
+        height: `${adjustedTotalHeight}px`,
+        margin: "20px 0", // Add margin to create space at the top and bottom
+      }}
     >
-      <div className="flex flex-col gap-1 max-w-[250px] scale-[0.8] sm:scale-100">
+      <div className="flex flex-col gap-1 max-w-[250px]">
         <div className="text-center font-mono mb-0.5 text-gray-600 text-sm">
           {new Date().toLocaleDateString()}
         </div>
