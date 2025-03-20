@@ -46,7 +46,8 @@ const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
               <img
                 src={photo}
                 alt={`Photo ${index + 1}`}
-                className={`w-full h-full object-cover scale-x-[-1] ${selectedFilter}`}
+                className="w-full h-full object-cover scale-x-[-1]"
+                style={{ filter: selectedFilter }}
               />
             </div>
             <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-lg text-[10px] font-mono bg-white/80 text-gray-600">

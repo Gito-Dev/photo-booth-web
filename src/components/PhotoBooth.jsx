@@ -172,6 +172,8 @@ const PhotoBooth = () => {
               numberY + 12
             );
 
+            ctx.filter = selectedFilter !== "none" ? selectedFilter : "none";
+
             resolve();
           };
           img.src = photos[i];

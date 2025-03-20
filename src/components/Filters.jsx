@@ -2,9 +2,13 @@ import { motion } from "framer-motion";
 
 const Filters = ({ selectedFilter, setSelectedFilter }) => {
   const filters = [
-    { name: "Invert", value: "invert" },
-    { name: "Sepia", value: "sepia" },
-    { name: "Grayscale", value: "grayscale" },
+    { name: "Vintage 1", value: "sepia(0.5) contrast(1.1) brightness(0.9)" },
+    {
+      name: "Vintage 2",
+      value: "sepia(0.3) contrast(1.2) saturate(1.3) brightness(0.8)",
+    },
+    { name: "Sepia", value: "sepia(1)" },
+    { name: "Grayscale", value: "grayscale(1)" },
     { name: "None", value: "none", isCustom: true },
   ];
 
