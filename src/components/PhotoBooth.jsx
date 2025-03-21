@@ -71,13 +71,14 @@ const PhotoBooth = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      // Set dimensions for the downloaded image
-      const photoWidth = 250;
+      // Match the dimensions from PhotoStrip.jsx
+      const photoWidth = 250; // Match line 10 in PhotoStrip
       const photoHeight = (photoWidth * 3) / 4;
       const padding = 20;
       const headerHeight = 40;
       const footerHeight = 60;
       const photoGap = 10;
+      const decorSize = 48; // Match the w-12 h-12 classes from PhotoStrip (12 * 4 = 48px)
 
       const totalHeight =
         headerHeight +
@@ -86,7 +87,7 @@ const PhotoBooth = () => {
         footerHeight +
         padding * 2;
 
-      canvas.width = photoWidth + padding * 2;
+      canvas.width = 300; // Match the width="300px" from PhotoStrip
       canvas.height = totalHeight;
 
       // Fill background
@@ -146,12 +147,10 @@ const PhotoBooth = () => {
         await new Promise((resolve) => {
           const decorImg = new Image();
           decorImg.onload = () => {
-            const decorSize = 48;
-
             for (let i = 0; i < photos.length; i++) {
               const y = headerHeight + (photoHeight + photoGap) * i + padding;
 
-              // Top right decoration
+              // Top right decoration - match the -top-2 -right-2 from PhotoStrip
               ctx.save();
               ctx.translate(canvas.width - padding + 8, y - 8);
               ctx.rotate(Math.PI / 4);
@@ -164,7 +163,7 @@ const PhotoBooth = () => {
               );
               ctx.restore();
 
-              // Bottom left decoration
+              // Bottom left decoration - match the -bottom-2 -left-2 from PhotoStrip
               ctx.save();
               ctx.translate(padding - 8, y + photoHeight + 8);
               ctx.rotate(-Math.PI / 4);

@@ -36,10 +36,11 @@ const PhotoStrip = ({
       style={{
         backgroundColor: bgColor,
         height: `${adjustedTotalHeight}px`,
-        margin: "20px 0", // Add margin to create space at the top and bottom
+        margin: "20px 0",
+        width: "300px",
       }}
     >
-      <div className="flex flex-col gap-1 max-w-[250px]">
+      <div className="flex flex-col gap-1 max-w-[300px]">
         <div className="text-center font-mono mb-0.5 text-gray-600 text-sm">
           {new Date().toLocaleDateString()}
         </div>
