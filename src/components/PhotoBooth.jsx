@@ -204,9 +204,9 @@ const PhotoBooth = () => {
 
   if (showPrintView) {
     return (
-      <motion.div className="h-screen flex flex-row bg-white">
-        {/* Left side - PhotoStrip (30%) */}
-        <div className="w-[30%] flex flex-col items-center justify-center">
+      <motion.div className="min-h-screen flex flex-col md:flex-row bg-white">
+        {/* PhotoStrip - Full width on mobile, 30% on desktop */}
+        <div className="w-full md:w-[30%] flex flex-col items-center justify-center py-4">
           <PhotoStrip
             photos={photos}
             bgColor={bgColor}
@@ -217,19 +217,19 @@ const PhotoBooth = () => {
           />
         </div>
 
-        {/* Right side - Controls (70%) */}
-        <div className="w-[70%] flex flex-col items-start justify-start pt-4 h-screen overflow-y-auto px-8">
+        {/* Controls - Full width on mobile, 70% on desktop */}
+        <div className="w-full md:w-[70%] flex flex-col items-start justify-start pt-4 px-4 md:px-8">
           <div className="w-full max-w-4xl">
             {/* Grid container for Colors and Filters */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Colors bgColor={bgColor} setBgColor={setBgColor} />
               <Filters
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
               />
-              {/* Custom Message section with matching styling */}
-              <motion.div className="w-full max-w-md px-8 mt-2">
-                <div className="bg-white p-8">
+              {/* Custom Message section */}
+              <motion.div className="w-full max-w-md px-4 md:px-8 mt-2">
+                <div className="bg-white p-4 md:p-8">
                   <div className="flex flex-col gap-4 mb-8">
                     <label className="text-sm text-gray-600 font-medium">
                       Custom Message
@@ -256,7 +256,8 @@ const PhotoBooth = () => {
               />
             </div>
 
-            <div className="mt-4">
+            {/* Action Buttons at the bottom */}
+            <div className="mt-4 mb-8">
               <ActionButtons
                 onRetake={() => {
                   setShowPrintView(false);
