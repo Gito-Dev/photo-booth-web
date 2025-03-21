@@ -5,6 +5,7 @@ import Colors from "./Colors";
 import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
 import Filters from "./Filters";
+import Themes from "./Themes";
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -16,6 +17,9 @@ const PhotoBooth = () => {
   const [isFlashing, setIsFlashing] = useState(false);
   const photoCount = 3; // Fixed number of photos
   const [selectedFilter, setSelectedFilter] = useState("none");
+  const [customMessage, setCustomMessage] = useState("Your Message");
+  const [messageColor, setMessageColor] = useState("#FFFFFF");
+  const [selectedTheme, setSelectedTheme] = useState(null);
   const webcamRef = useRef(null);
 
   useEffect(() => {
@@ -68,14 +72,13 @@ const PhotoBooth = () => {
       const ctx = canvas.getContext("2d");
 
       // Set dimensions for the downloaded image
-      const photoWidth = 250; // Increased width for the downloaded image
+      const photoWidth = 250;
       const photoHeight = (photoWidth * 3) / 4;
       const padding = 20;
-      const headerHeight = 40; // Height for the top
-      const footerHeight = 60; // Increased height for the bottom
+      const headerHeight = 40;
+      const footerHeight = 60;
       const photoGap = 10;
 
-      // Calculate total height based on the number of photos
       const totalHeight =
         headerHeight +
         photoHeight * photos.length +
@@ -86,7 +89,7 @@ const PhotoBooth = () => {
       canvas.width = photoWidth + padding * 2;
       canvas.height = totalHeight;
 
-      // Fill entire canvas with selected background color
+      // Fill background
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -100,85 +103,95 @@ const PhotoBooth = () => {
         padding + 24
       );
 
-      // Load and draw each photo
+      // First draw all photos
       for (let i = 0; i < photos.length; i++) {
+        const y = headerHeight + (photoHeight + photoGap) * i + padding;
+
+        // Draw photo
         await new Promise((resolve) => {
           const img = new Image();
           img.onload = () => {
-            const y = headerHeight + (photoHeight + photoGap) * i + padding;
-
-            // Draw the image onto an off-screen canvas to manipulate pixel data
-            const offCanvas = document.createElement("canvas");
-            const offCtx = offCanvas.getContext("2d");
-            offCanvas.width = photoWidth;
-            offCanvas.height = photoHeight;
-            offCtx.drawImage(img, 0, 0, photoWidth, photoHeight);
-
-            // Get image data
-            const imageData = offCtx.getImageData(
-              0,
-              0,
-              photoWidth,
-              photoHeight
-            );
-            const data = imageData.data;
-
-            // Apply filter manually
-            if (selectedFilter === "grayscale") {
-              for (let j = 0; j < data.length; j += 4) {
-                const avg = (data[j] + data[j + 1] + data[j + 2]) / 3;
-                data[j] = avg; // Red
-                data[j + 1] = avg; // Green
-                data[j + 2] = avg; // Blue
-              }
-            }
-            // Add more filter conditions here if needed
-
-            // Put the modified image data back
-            offCtx.putImageData(imageData, 0, 0);
-
-            // Save the current canvas state
             ctx.save();
-
-            // Translate and scale to mirror the image
             ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
-
-            // Draw mirrored photo with applied filter
-            ctx.drawImage(offCanvas, padding, y, photoWidth, photoHeight);
-
-            // Restore canvas state
-            ctx.restore();
-
-            // Draw frame number with semi-transparent background
-            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-            const numberWidth = 30;
-            const numberHeight = 15;
-            const numberX = canvas.width - padding - numberWidth - 5;
-            const numberY = y + photoHeight - numberHeight - 5;
-
-            // Draw rounded rectangle for number background
-            ctx.beginPath();
-            ctx.roundRect(numberX, numberY, numberWidth, numberHeight, 5);
-            ctx.fill();
-
-            // Draw number
-            ctx.fillStyle = "#4B5563";
-            ctx.font = "10px monospace";
-            ctx.textAlign = "center";
-            ctx.fillText(
-              `${i + 1}/${photos.length}`,
-              numberX + numberWidth / 2,
-              numberY + 12
-            );
-
             ctx.filter = selectedFilter !== "none" ? selectedFilter : "none";
-
+            ctx.drawImage(img, padding, y, photoWidth, photoHeight);
+            ctx.restore();
             resolve();
           };
           img.src = photos[i];
         });
+
+        // Draw frame number
+        ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+        const numberWidth = 30;
+        const numberHeight = 15;
+        const numberX = canvas.width - padding - numberWidth - 5;
+        const numberY = y + photoHeight - numberHeight - 5;
+        ctx.beginPath();
+        ctx.roundRect(numberX, numberY, numberWidth, numberHeight, 5);
+        ctx.fill();
+        ctx.fillStyle = "#4B5563";
+        ctx.font = "10px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          `${i + 1}/${photos.length}`,
+          numberX + numberWidth / 2,
+          numberY + 12
+        );
       }
+
+      // Then draw all decorations on top
+      if (selectedTheme?.decorations) {
+        await new Promise((resolve) => {
+          const decorImg = new Image();
+          decorImg.onload = () => {
+            const decorSize = 48;
+
+            for (let i = 0; i < photos.length; i++) {
+              const y = headerHeight + (photoHeight + photoGap) * i + padding;
+
+              // Top right decoration
+              ctx.save();
+              ctx.translate(canvas.width - padding + 8, y - 8);
+              ctx.rotate(Math.PI / 4);
+              ctx.drawImage(
+                decorImg,
+                -decorSize / 2,
+                -decorSize / 2,
+                decorSize,
+                decorSize
+              );
+              ctx.restore();
+
+              // Bottom left decoration
+              ctx.save();
+              ctx.translate(padding - 8, y + photoHeight + 8);
+              ctx.rotate(-Math.PI / 4);
+              ctx.drawImage(
+                decorImg,
+                -decorSize / 2,
+                -decorSize / 2,
+                decorSize,
+                decorSize
+              );
+              ctx.restore();
+            }
+            resolve();
+          };
+          decorImg.src = selectedTheme.icon;
+        });
+      }
+
+      // Add custom message at bottom
+      ctx.fillStyle = messageColor;
+      ctx.font = "14px monospace";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        customMessage || "Your Message",
+        canvas.width / 2,
+        canvas.height - padding
+      );
 
       // Download the canvas
       const link = document.createElement("a");
@@ -192,21 +205,58 @@ const PhotoBooth = () => {
 
   if (showPrintView) {
     return (
-      <motion.div className="h-screen flex flex-col sm:flex-row bg-white">
-        <div className="flex-1 flex flex-col items-center justify-center order-1 sm:order-1">
+      <motion.div className="h-screen flex flex-row bg-white">
+        {/* Left side - PhotoStrip (30%) */}
+        <div className="w-[30%] flex flex-col items-center justify-center">
           <PhotoStrip
             photos={photos}
             bgColor={bgColor}
             selectedFilter={selectedFilter}
+            customMessage={customMessage}
+            messageColor={messageColor}
+            selectedTheme={selectedTheme}
           />
         </div>
-        <div className="flex-1 flex flex-col items-center justify-center order-2 sm:order-2">
-          <div className="w-full max-w-md px-8">
-            <Colors bgColor={bgColor} setBgColor={setBgColor} />
-            <Filters
-              selectedFilter={selectedFilter}
-              setSelectedFilter={setSelectedFilter}
-            />
+
+        {/* Right side - Controls (70%) */}
+        <div className="w-[70%] flex flex-col items-start justify-start pt-4 h-screen overflow-y-auto px-8">
+          <div className="w-full max-w-4xl">
+            {/* Grid container for Colors and Filters */}
+            <div className="grid grid-cols-2 gap-4">
+              <Colors bgColor={bgColor} setBgColor={setBgColor} />
+              <Filters
+                selectedFilter={selectedFilter}
+                setSelectedFilter={setSelectedFilter}
+              />
+              {/* Custom Message section with matching styling */}
+              <motion.div className="w-full max-w-md px-8 mt-2">
+                <div className="bg-white p-8">
+                  <div className="flex flex-col gap-4 mb-8">
+                    <label className="text-sm text-gray-600 font-medium">
+                      Custom Message
+                    </label>
+                    <input
+                      type="text"
+                      value={customMessage}
+                      onChange={(e) => setCustomMessage(e.target.value)}
+                      className="w-full p-2 border rounded"
+                      placeholder="Enter your message"
+                    />
+                    <input
+                      type="color"
+                      value={messageColor}
+                      onChange={(e) => setMessageColor(e.target.value)}
+                      className="w-full h-10 rounded cursor-pointer"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+              <Themes
+                selectedTheme={selectedTheme}
+                setSelectedTheme={setSelectedTheme}
+              />
+            </div>
+
             <div className="mt-4">
               <ActionButtons
                 onRetake={() => {

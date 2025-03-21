@@ -1,4 +1,11 @@
-const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
+const PhotoStrip = ({
+  photos,
+  bgColor,
+  selectedFilter,
+  customMessage,
+  messageColor,
+  selectedTheme,
+}) => {
   // Define constants for photo dimensions and spacing
   const photoWidth = 250; // Match the width used in the download
   const photoHeight = (photoWidth * 3) / 4; // Maintain the aspect ratio
@@ -41,6 +48,7 @@ const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
           <div key={index} className="relative">
             <div
               className="aspect-[4/3] overflow-hidden"
+              y
               style={{ height: `${photoHeight}px` }}
             >
               <img
@@ -49,12 +57,38 @@ const PhotoStrip = ({ photos, bgColor, selectedFilter }) => {
                 className="w-full h-full object-cover scale-x-[-1]"
                 style={{ filter: selectedFilter }}
               />
+              {selectedTheme?.decorations && (
+                <>
+                  {/* Top right decoration - overlapping the photo and strip */}
+                  <img
+                    src={selectedTheme.icon}
+                    alt=""
+                    className="absolute -top-2 -right-2 w-12 h-12 transform rotate-45"
+                    style={{ zIndex: 10 }}
+                  />
+                  {/* Bottom left decoration - overlapping the photo and strip */}
+                  <img
+                    src={selectedTheme.icon}
+                    alt=""
+                    className="absolute -bottom-2 -left-2 w-12 h-12 transform -rotate-45"
+                    style={{ zIndex: 10 }}
+                  />
+                </>
+              )}
             </div>
             <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-lg text-[10px] font-mono bg-white/80 text-gray-600">
               {index + 1}/{photos.length}
             </div>
           </div>
         ))}
+
+        {/* Add custom message at the bottom */}
+        <div
+          className="text-center font-mono mt-2 text-sm"
+          style={{ color: messageColor }}
+        >
+          {customMessage || "Your Message"}
+        </div>
       </div>
     </div>
   );
