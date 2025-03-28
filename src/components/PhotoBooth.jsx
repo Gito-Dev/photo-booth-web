@@ -6,6 +6,7 @@ import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
 import Filters from "./Filters";
 import Themes from "./Themes";
+import Logo from "../assets/Logo.png"; // Make sure the path matches your actual logo location
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -275,6 +276,15 @@ const PhotoBooth = () => {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-white">
       <motion.div className="w-full max-w-lg">
+        {/* Updated title colors */}
+        <div className="flex flex-col items-center mb-6">
+          <img src={Logo} alt="Logo" className="w-auto h-30 mb-3" />
+          <h1 className="text-3xl font-bold text-sky-300 mb-2">
+            Capture The Second
+          </h1>
+          <p className="text-amber-200 text-lg">Online Photo Booth</p>
+        </div>
+
         <motion.div className="flex flex-col items-center gap-4">
           <CameraView
             webcamRef={webcamRef}
