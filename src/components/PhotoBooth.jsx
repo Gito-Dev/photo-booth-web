@@ -279,10 +279,10 @@ const PhotoBooth = () => {
         {/* Updated title colors */}
         <div className="flex flex-col items-center mb-6">
           <img src={Logo} alt="Logo" className="w-auto h-30 mb-3" />
-          <h1 className="text-3xl font-bold text-sky-300 mb-2">
+          <h1 className="text-3xl font-bold text-[#38b6ff] mb-2">
             Capture The Second
           </h1>
-          <p className="text-amber-200 text-lg">Online Photo Booth</p>
+          <p className="text-[#ffde59] text-lg">Online Photo Booth</p>
         </div>
 
         <motion.div className="flex flex-col items-center gap-4">
