@@ -2,7 +2,7 @@
 
 A modern, interactive web-based photo booth application built with React that allows users to take photos, apply filters, customize themes, and create memorable photo strips.
 
-![Photo Booth Logo](./src/public/Icon.png)
+![Photo Booth Logo](./src/assets/Icon.png)
 
 ## 🌟 Features
 
