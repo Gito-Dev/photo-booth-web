@@ -6,7 +6,7 @@ import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
 import Filters from "./Filters";
 import Themes from "./Themes";
-import Logo from "../assets/Logo.png"; // Make sure the path matches your actual logo location
+import Logo from "../assets/Logo.png";
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -16,7 +16,7 @@ const PhotoBooth = () => {
   const [countdown, setCountdown] = useState(3);
   const [cameraPermission, setCameraPermission] = useState(false);
   const [isFlashing, setIsFlashing] = useState(false);
-  const photoCount = 3; // Fixed number of photos
+  const photoCount = 3;
   const [selectedFilter, setSelectedFilter] = useState("none");
   const [customMessage, setCustomMessage] = useState("Your Message");
   const [messageColor, setMessageColor] = useState("#FFFFFF");
@@ -72,14 +72,13 @@ const PhotoBooth = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      // Match the dimensions from PhotoStrip.jsx
-      const photoWidth = 250; // Match line 10 in PhotoStrip
+      const photoWidth = 250;
       const photoHeight = (photoWidth * 3) / 4;
       const padding = 20;
       const headerHeight = 40;
       const footerHeight = 60;
       const photoGap = 10;
-      const decorSize = 48; // Match the w-12 h-12 classes from PhotoStrip (12 * 4 = 48px)
+      const decorSize = 48;
 
       const totalHeight =
         headerHeight +
@@ -88,14 +87,12 @@ const PhotoBooth = () => {
         footerHeight +
         padding * 2;
 
-      canvas.width = 300; // Match the width="300px" from PhotoStrip
+      canvas.width = 300;
       canvas.height = totalHeight;
 
-      // Fill background
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Add date at top
       ctx.fillStyle = "#4B5563";
       ctx.font = "14px monospace";
       ctx.textAlign = "center";
@@ -105,11 +102,9 @@ const PhotoBooth = () => {
         padding + 24
       );
 
-      // First draw all photos
       for (let i = 0; i < photos.length; i++) {
         const y = headerHeight + (photoHeight + photoGap) * i + padding;
 
-        // Draw photo
         await new Promise((resolve) => {
           const img = new Image();
           img.onload = () => {
@@ -124,7 +119,6 @@ const PhotoBooth = () => {
           img.src = photos[i];
         });
 
-        // Draw frame number
         ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
         const numberWidth = 30;
         const numberHeight = 15;
@@ -143,7 +137,6 @@ const PhotoBooth = () => {
         );
       }
 
-      // Then draw all decorations on top
       if (selectedTheme?.decorations) {
         await new Promise((resolve) => {
           const decorImg = new Image();
@@ -151,7 +144,6 @@ const PhotoBooth = () => {
             for (let i = 0; i < photos.length; i++) {
               const y = headerHeight + (photoHeight + photoGap) * i + padding;
 
-              // Top right decoration - match the -top-2 -right-2 from PhotoStrip
               ctx.save();
               ctx.translate(canvas.width - padding + 8, y - 8);
               ctx.rotate(Math.PI / 4);
@@ -164,7 +156,6 @@ const PhotoBooth = () => {
               );
               ctx.restore();
 
-              // Bottom left decoration - match the -bottom-2 -left-2 from PhotoStrip
               ctx.save();
               ctx.translate(padding - 8, y + photoHeight + 8);
               ctx.rotate(-Math.PI / 4);
@@ -183,7 +174,6 @@ const PhotoBooth = () => {
         });
       }
 
-      // Add custom message at bottom
       ctx.fillStyle = messageColor;
       ctx.font = "14px monospace";
       ctx.textAlign = "center";
@@ -193,7 +183,6 @@ const PhotoBooth = () => {
         canvas.height - padding
       );
 
-      // Download the canvas
       const link = document.createElement("a");
       link.download = `photobooth-${new Date().getTime()}.jpg`;
       link.href = canvas.toDataURL("image/jpeg", 1.0);
@@ -206,7 +195,6 @@ const PhotoBooth = () => {
   if (showPrintView) {
     return (
       <motion.div className="min-h-screen flex flex-col md:flex-row bg-white">
-        {/* PhotoStrip - Full width on mobile, 30% on desktop */}
         <div className="w-full md:w-[30%] flex flex-col items-center justify-center py-4">
           <PhotoStrip
             photos={photos}
@@ -218,17 +206,14 @@ const PhotoBooth = () => {
           />
         </div>
 
-        {/* Controls - Full width on mobile, 70% on desktop */}
         <div className="w-full md:w-[70%] flex flex-col items-start justify-start pt-4 px-4 md:px-8">
           <div className="w-full max-w-4xl">
-            {/* Grid container for Colors and Filters */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Colors bgColor={bgColor} setBgColor={setBgColor} />
               <Filters
                 selectedFilter={selectedFilter}
                 setSelectedFilter={setSelectedFilter}
               />
-              {/* Custom Message section */}
               <motion.div className="w-full max-w-md px-4 md:px-8 mt-2">
                 <div className="bg-white p-4 md:p-8">
                   <div className="flex flex-col gap-4 mb-8">
@@ -245,7 +230,7 @@ const PhotoBooth = () => {
                     <input
                       type="color"
                       value={messageColor}
-                      onChange={(e) => setMessageColor(e.target.value)}
+                      onChange={(e) => setMessageColor(e.value)}
                       className="w-full h-10 rounded cursor-pointer"
                     />
                   </div>
@@ -257,7 +242,6 @@ const PhotoBooth = () => {
               />
             </div>
 
-            {/* Action Buttons at the bottom */}
             <div className="mt-4 mb-8">
               <ActionButtons
                 onRetake={() => {
@@ -276,7 +260,6 @@ const PhotoBooth = () => {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-white">
       <motion.div className="w-full max-w-lg">
-        {/* Updated title colors */}
         <div className="flex flex-col items-center mb-6">
           <img src={Logo} alt="Logo" className="w-auto h-30 mb-3" />
           <h1 className="text-3xl font-bold text-[#38b6ff] mb-2">

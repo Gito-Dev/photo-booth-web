@@ -6,15 +6,13 @@ const PhotoStrip = ({
   messageColor,
   selectedTheme,
 }) => {
-  // Define constants for photo dimensions and spacing
-  const photoWidth = 250; // Match the width used in the download
-  const photoHeight = (photoWidth * 3) / 4; // Maintain the aspect ratio
-  const photoGap = 10; // Gap between photos
-  const padding = 20; // Padding used in the download
-  const headerHeight = 40; // Height for the top
-  const footerHeight = 60; // Height for the bottom
+  const photoWidth = 250;
+  const photoHeight = (photoWidth * 3) / 4;
+  const photoGap = 10;
+  const padding = 20;
+  const headerHeight = 40;
+  const footerHeight = 60;
 
-  // Adjust total height based on the number of photos
   const totalHeight =
     headerHeight +
     photos.length * photoHeight +
@@ -22,9 +20,8 @@ const PhotoStrip = ({
     footerHeight +
     padding * 2;
 
-  // Adjust layout for 4 photos
   const isFourPhotos = photos.length === 4;
-  const adjustedPadding = isFourPhotos ? padding * 0.5 : padding; // Reduce padding for 4 photos
+  const adjustedPadding = isFourPhotos ? padding * 0.5 : padding;
   const adjustedTotalHeight = isFourPhotos
     ? totalHeight - (padding - adjustedPadding) * 2
     : totalHeight;
@@ -49,7 +46,6 @@ const PhotoStrip = ({
           <div key={index} className="relative">
             <div
               className="aspect-[4/3] overflow-hidden"
-              y
               style={{ height: `${photoHeight}px` }}
             >
               <img
@@ -60,14 +56,12 @@ const PhotoStrip = ({
               />
               {selectedTheme?.decorations && (
                 <>
-                  {/* Top right decoration - overlapping the photo and strip */}
                   <img
                     src={selectedTheme.icon}
                     alt=""
                     className="absolute -top-2 -right-2 w-12 h-12 transform rotate-45"
                     style={{ zIndex: 10 }}
                   />
-                  {/* Bottom left decoration - overlapping the photo and strip */}
                   <img
                     src={selectedTheme.icon}
                     alt=""
@@ -83,7 +77,6 @@ const PhotoStrip = ({
           </div>
         ))}
 
-        {/* Add custom message at the bottom */}
         <div
           className="text-center font-mono mt-2 text-sm"
           style={{ color: messageColor }}
