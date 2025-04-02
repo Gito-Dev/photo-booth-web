@@ -6,7 +6,7 @@ import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
 import Filters from "./Filters";
 import Themes from "./Themes";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/Icon.png";
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -230,7 +230,7 @@ const PhotoBooth = () => {
                     <input
                       type="color"
                       value={messageColor}
-                      onChange={(e) => setMessageColor(e.value)}
+                      onChange={(e) => setMessageColor(e.target.value)}
                       className="w-full h-10 rounded cursor-pointer"
                     />
                   </div>
