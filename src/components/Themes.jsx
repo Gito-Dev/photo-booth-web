@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import heart from "../assets/heart.svg";
 import rose from "../assets/rose.svg";
-
+import stitch from "../assets/stitch.png";
 const Themes = ({ selectedTheme, setSelectedTheme }) => {
   const themes = [
     {
@@ -19,6 +19,15 @@ const Themes = ({ selectedTheme, setSelectedTheme }) => {
       icon: rose,
       decorations: {
         topRight: rose,
+        bottomLeft: rose,
+      },
+    },
+    {
+      name: "Stitch",
+      value: "Stitch",
+      icon: stitch,
+      decorations: {
+        topRight: stitch,
         bottomLeft: rose,
       },
     },
