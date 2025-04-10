@@ -1,3 +1,4 @@
+import React from "react";
 import { motion } from "framer-motion";
 import heart from "../assets/heart.svg";
 import rose from "../assets/rose.svg";

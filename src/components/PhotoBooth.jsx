@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import CameraView from "./CameraView";
 import Colors from "./Colors";
@@ -6,7 +6,6 @@ import PhotoStrip from "./PhotoStrip";
 import ActionButtons from "./ActionButtons";
 import Filters from "./Filters";
 import Themes from "./Themes";
-import Logo from "../assets/Icon.png";
 
 const PhotoBooth = () => {
   const [photos, setPhotos] = useState([]);
@@ -260,14 +259,6 @@ const PhotoBooth = () => {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-white">
       <motion.div className="w-full max-w-lg">
-        <div className="flex flex-col items-center mb-6">
-          <img src={Logo} alt="Logo" className="w-auto h-30 mb-3" />
-          <h1 className="text-3xl font-bold text-[#38b6ff] mb-2">
-            Capture The Second
-          </h1>
-          <p className="text-[#ffde59] text-lg">Online Photo Booth</p>
-        </div>
-
         <motion.div className="flex flex-col items-center gap-4">
           <CameraView
             webcamRef={webcamRef}
