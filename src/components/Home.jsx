@@ -57,6 +57,17 @@ const Home = () => {
             GitHub
           </a>
         </div>
+        <p className="text-xs text-gray-500 mt-4">
+          Made with ❤️ by{" "}
+          <a
+            href="https://gito.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold hover:text-blue-600"
+          >
+            gito.dev
+          </a>
+        </p>
       </div>
     </div>
   );
