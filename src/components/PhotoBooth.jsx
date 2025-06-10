@@ -193,7 +193,7 @@ const PhotoBooth = () => {
 
   if (showPrintView) {
     return (
-      <motion.div className="min-h-screen flex flex-col md:flex-row bg-white">
+      <motion.div className="min-h-screen flex flex-col md:flex-row">
         <div className="w-full md:w-[30%] flex flex-col items-center justify-center py-4">
           <PhotoStrip
             photos={photos}
