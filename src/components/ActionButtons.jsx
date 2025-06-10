@@ -19,21 +19,22 @@ const ActionButtons = ({ onRetake, onDownload }) => {
   return (
     <div className="flex justify-center gap-8">
       <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={onRetake}
-        className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
+        className="px-8 py-3 rounded-full shadow-lg text-xl transition-colors flex items-center gap-2"
+        style={{ backgroundColor: "#54877F", color: "#fff" }}
       >
         {cameraIcon}
+        Retake
       </motion.button>
 
       <motion.button
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={onDownload}
-        className="w-20 h-20 rounded-full bg-purple-500 text-white flex items-center justify-center shadow-lg hover:bg-purple-600"
+        className="px-8 py-3 rounded-full shadow-lg text-xl transition-colors flex items-center gap-2"
+        style={{ backgroundColor: "#da5d38", color: "#fff" }}
       >
         <svg
           fill="currentColor"
@@ -46,6 +47,7 @@ const ActionButtons = ({ onRetake, onDownload }) => {
         >
           <path d="M8 6.641l1.121-1.12a1 1 0 0 1 1.415 1.413L7.707 9.763a.997.997 0 0 1-1.414 0L3.464 6.934A1 1 0 1 1 4.88 5.52L6 6.641V1a1 1 0 1 1 2 0v5.641zM1 12h12a1 1 0 0 1 0 2H1a1 1 0 0 1 0-2z" />
         </svg>
+        Download
       </motion.button>
     </div>
   );

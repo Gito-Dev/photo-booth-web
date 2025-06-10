@@ -279,11 +279,11 @@ const PhotoBooth = () => {
             !isCapturing && (
               <div className="flex justify-center">
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={capturePhotos}
-                  className="w-20 h-20 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg hover:bg-red-600"
+                  className="px-8 py-3 rounded-full shadow-lg text-xl transition-colors flex items-center gap-2"
+                  style={{ backgroundColor: "#da5d38", color: "#fff" }}
                 >
                   <svg
                     fill="currentColor"
@@ -296,6 +296,7 @@ const PhotoBooth = () => {
                       <path d="M46,14h-5.2c-1.4,0-2.6-0.7-3.4-1.8l-2.3-3.5C34.4,7,32.7,6,30.9,6h-9.8c-1.8,0-3.5,1-4.3,2.7l-2.3,3.5c-0.7,1.1-2,1.8-3.4,1.8H6c-2.2,0-4,1.8-4,4v24c0,2.2,1.8,4,4,4h40c2.2,0,4-1.8,4-4V18C50,15.8,48.2,14,46,14z M26,40c-6.6,0-12-5.4-12-12s5.4-12,12-12s12,5.4,12,12S32.6,40,26,40z" />
                     </g>
                   </svg>
+                  Capture
                 </motion.button>
               </div>
             )
