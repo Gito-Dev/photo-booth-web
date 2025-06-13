@@ -257,6 +257,7 @@ const PhotoBooth = () => {
   }
 
   return (
+    // body
     <div className="h-screen flex flex-col items-center justify-center bg-white">
       <motion.div className="w-full max-w-lg">
         <motion.div className="flex flex-col items-center gap-4">
